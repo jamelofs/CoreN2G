@@ -105,6 +105,18 @@
 # define SAME5x				0
 # define SAME70				0
 # define RP2040				0
+#elif defined(__STM32MP1__)
+# include <stm32MP1.h>
+# include <dwt.h>
+# define STM32  			1
+# define STM32MP1			1
+# define SAMC21				0
+# define SAM3XA				0
+# define SAM4E				0
+# define SAM4S				0
+# define SAME5x				0
+# define SAME70				0
+# define RP2040				0
 #elif defined __RP2040__
 extern "C" {
 # include <hardware/gpio.h>
@@ -189,7 +201,9 @@ static const uint32_t SystemCoreClockFreq = 480000000;	///< The processor clock 
 #elif RP2040
 
 static const uint32_t SystemCoreClockFreq = 125000000;	///< The processor clock frequency after initialisation
+#elif STM32MP1
 
+static const uint32_t SystemCoreClockFreq = 168000000;	///< The processor clock frequency after initialisation
 #else
 # error unsupported processor
 #endif

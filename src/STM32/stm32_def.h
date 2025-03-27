@@ -30,6 +30,8 @@
 #include "stm32f2xx.h"
 #elif defined(STM32F3xx)
 #include "stm32f3xx.h"
+#elif defined(STM32MP1xx)
+#include "stm32mp1xx.h"
 #elif defined(STM32F4xx)
 #include "stm32f4xx.h"
 #elif defined(STM32F7xx)
