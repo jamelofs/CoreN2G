@@ -36,6 +36,7 @@ extern "C" {
 #define TIM_IRQ_SUBPRIO    0
 #endif
 
+#if !defined(__STM32MP1__) //No aliasing in MP1 interrupt table
 #if defined(TIM1_BASE) && !defined(TIM1_IRQn)
 #if defined(STM32F0xx) || defined(STM32G0xx)
 #define TIM1_IRQn TIM1_BRK_UP_TRG_COM_IRQn
@@ -155,6 +156,7 @@ extern "C" {
 #if defined(STM32F3xx) || defined(STM32G4xx)
 #define TIM20_IRQn TIM20_UP_IRQn
 #define TIM20_IRQHandler TIM20_UP_IRQHandler
+#endif
 #endif
 #endif
 

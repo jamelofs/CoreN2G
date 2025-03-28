@@ -684,6 +684,8 @@ void WatchdogInit() noexcept
 #if STM32H7
     wdHandle.Instance = IWDG1;
 	wdHandle.Init.Window = IWDG_WINDOW_DISABLE;
+#elif __STM32MP1__
+	wdHandle.Instance = WWDG1;
 #else
     wdHandle.Instance = IWDG;
 #endif

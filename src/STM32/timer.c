@@ -359,7 +359,11 @@ IRQn_Type getTimerUpIrq(TIM_TypeDef *tim)
     switch ((uint32_t)tim) {
 #if defined(TIM1_BASE)
       case (uint32_t)TIM1_BASE:
+#if defined(__STM32MP1__)
+        IRQn = TIM1_UP_IRQn;
+#else
         IRQn = TIM1_IRQn;
+#endif
         break;
 #endif
 #if defined(TIM2_BASE)
@@ -394,7 +398,11 @@ IRQn_Type getTimerUpIrq(TIM_TypeDef *tim)
 #endif
 #if defined(TIM8_BASE)
       case (uint32_t)TIM8_BASE:
-        IRQn = TIM8_IRQn;
+#if defined(__STM32MP1__)
+      IRQn = TIM8_UP_IRQn;
+#else
+      IRQn = TIM8_IRQn;
+#endif
         break;
 #endif
 #if defined(TIM9_BASE)

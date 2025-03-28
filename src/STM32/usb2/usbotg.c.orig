@@ -17,10 +17,12 @@
 #define IRQ_HANDLER OTG_HS_IRQHandler
 #define USBOTGEN RCC_AHB1ENR_USB1OTGHSEN
 #else
+#if !defined(__STM32MP1__)
 #define USB_PERIPH_BASE USB_OTG_FS_PERIPH_BASE
 #define OTG_IRQn OTG_FS_IRQn
 #define IRQ_HANDLER OTG_FS_IRQHandler
 #define USBOTGEN RCC_AHB1ENR_USB2OTGHSEN
+#endif
 #endif
 #define GPIO_D_NEG PA_11
 #define GPIO_D_POS PA_12
@@ -29,6 +31,10 @@
 /****************************************************************
  * USB transfer memory
  ****************************************************************/
+
+#ifdef __STM32MP1__
+#define USB_PERIPH_BASE USBOTG_BASE
+#endif
 
 #define OTG ((USB_OTG_GlobalTypeDef*)USB_PERIPH_BASE)
 #define OTGD ((USB_OTG_DeviceTypeDef*)(USB_PERIPH_BASE + USB_OTG_DEVICE_BASE))
