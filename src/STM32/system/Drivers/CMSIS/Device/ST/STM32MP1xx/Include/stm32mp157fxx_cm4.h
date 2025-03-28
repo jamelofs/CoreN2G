@@ -3256,7 +3256,7 @@ typedef struct
 #define TIM12               ((TIM_TypeDef *) TIM12_BASE)
 #define TIM13               ((TIM_TypeDef *) TIM13_BASE)
 #define TIM14               ((TIM_TypeDef *) TIM14_BASE)
-#define LCD                 ((LCD_TypeDef *) LCD_BASE)
+// #define LCD                 ((LCD_TypeDef *) LCD_BASE) //This seems to cause a problem elsewhere, perhaps LCD is already takem
 #define RTC                 ((RTC_TypeDef *) RTC_BASE)
 #define TAMP                 ((TAMP_TypeDef *) TAMP_BASE)
 #define WWDG1               ((WWDG_TypeDef *) WWDG1_BASE)

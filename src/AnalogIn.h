@@ -30,6 +30,13 @@
 #define TEMPSENSOR_CAL2_DEF 1197
 #define VREFINT_CAL_DEF 1500
 #define GET_ADC_CAL(CAL, DEF) (*CAL == 0xffff ? DEF : *CAL)
+#elif __STM32MP1__
+#include "stm32mp1xx_ll_adc.h"
+// ADC VREF and MCU Temperature calibration values
+#define TEMPSENSOR_CAL1_DEF 931
+#define TEMPSENSOR_CAL2_DEF 1197
+#define VREFINT_CAL_DEF 1500
+#define GET_ADC_CAL(CAL, DEF) (*CAL == 0xffff ? DEF : *CAL)
 #endif
 
 typedef void (*AnalogInCallbackFunction)(CallbackParameter p, uint32_t reading) noexcept;
