@@ -757,7 +757,7 @@ void UART_ErrorCallback(UART_HandleTypeDef *huart)
 static inline HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
 {
   serial_t *obj = get_serial_obj(huart);
-#if STM32H7
+#if STM32H7 || __STM32MP1__
   uint8_t val = (uint8_t)(huart->Instance->RDR & (uint8_t)0x00FF);
 #else
   uint8_t val = (uint8_t)(huart->Instance->DR & (uint8_t)0x00FF);
@@ -783,7 +783,7 @@ static inline HAL_StatusTypeDef UART_Transmit_IT(UART_HandleTypeDef *huart)
 {
   serial_t *obj = get_serial_obj(huart);
   // write the data
-#if STM32H7
+#if STM32H7 || __STM32MP1__
   huart->Instance->TDR = obj->tx_buff[obj->tx_tail];
 #else
   huart->Instance->DR = obj->tx_buff[obj->tx_tail];
@@ -815,7 +815,7 @@ static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart)
   if (obj->tx_tail != obj->tx_head)
   {
     // Yes so send the data
-#if STM32H7
+#if STM32H7 || __STM32MP1__
     huart->Instance->TDR = obj->tx_buff[obj->tx_tail];
 #else
     huart->Instance->DR = obj->tx_buff[obj->tx_tail];
@@ -847,7 +847,7 @@ static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart)
   */
 static void UART_IRQHandler(UART_HandleTypeDef *huart)
 {
-#if STM32H7
+#if STM32H7 || __STM32MP1__
   uint32_t isrflags   = READ_REG(huart->Instance->ISR);
   uint32_t errorflags = (isrflags & (uint32_t)(USART_ISR_PE | USART_ISR_FE | USART_ISR_ORE | USART_ISR_NE | USART_ISR_RTOF));
 #else
@@ -870,7 +870,7 @@ static void UART_IRQHandler(UART_HandleTypeDef *huart)
 
   /* If some errors occur */
 // FIXME: This is a mess different flags on H7/F4
-#if STM32H7
+#if STM32H7 || __STM32MP1__
   if ((errorflags != 0U)
       && ((((cr3its & (USART_CR3_RXFTIE | USART_CR3_EIE)) != 0U)
            || ((cr1its & (USART_CR1_RXNEIE_RXFNEIE | USART_CR1_PEIE | USART_CR1_RTOIE)) != 0U))))

@@ -58,9 +58,17 @@ constexpr uint32_t StmChanMap3[] = {ADC_CHANNEL_0, ADC_CHANNEL_1, ADC_CHANNEL_2,
                                     ADC_CHANNEL_14, ADC_CHANNEL_15};
 constexpr uint32_t CHAN_VREFINT = (ADC_1 | 17);
 constexpr uint32_t CHAN_TEMPSENSOR = (ADC_1 | 16);
+#if defined(__STM32MP1__) //Likely to break DMA, perhaps cleaner than attempting to remove adc drivers (Hans)
+constexpr uint32_t ADC1DMA = DMA_REQUEST_ADC1;
+#else
 constexpr uint32_t ADC1DMA = DMA_CHANNEL_0;
 constexpr uint32_t ADC3DMA = DMA_CHANNEL_2;
+#endif
+#ifdef __STM32MP1__
+constexpr uint32_t ADC_SAMPLETIME = ADC_SAMPLETIME_387CYCLES_5;
+#else
 constexpr uint32_t ADC_SAMPLETIME = ADC_SAMPLETIME_480CYCLES;
+#endif
 #endif
 static constexpr const uint32_t *StmChanMap[NumADCs+1] = {nullptr, StmChanMap1, nullptr, StmChanMap3};
 constexpr uint32_t NumChannels[NumADCs+1] = {0, NumChannelsADC1, 0, NumChannelsADC3};
@@ -114,8 +122,10 @@ static AnalogChannelNumber GetAdcChannel(PinName pin)
     else if (adc == ADC2)
         return (ADC_2 | STM_PIN_CHANNEL(function));
 #endif
+#if !defined(__STM32MP1__)
     else if (adc == ADC3)
         return (ADC_3 | STM_PIN_CHANNEL(function));
+#endif
     else
     {
         return NO_ADC;
@@ -127,7 +137,7 @@ static void ConfigureDma(DMA_HandleTypeDef& DmaHandle, DMA_Stream_TypeDef *inst,
 {
     DmaHandle.Instance = inst;
 
-#if STM32H7
+#if STM32H7 || __STM32MP1__
     DmaHandle.Init.Request  = chan;
 #else
     DmaHandle.Init.Channel  = chan;
@@ -165,10 +175,14 @@ static void ConfigureAdc(ADC_HandleTypeDef& AdcHandle, ADC_TypeDef *inst, uint32
     AdcHandle.Init.DMAContinuousRequests    = ENABLE;
 #endif
 #else
+#if __STM32MP1__
+    AdcHandle.Init.ClockPrescaler           = ADC_CLOCK_SYNC_PCLK_DIV4;
+#else
     AdcHandle.Init.ClockPrescaler           = ADC_CLOCK_SYNC_PCLK_DIV8;
     AdcHandle.Init.DataAlign                = ADC_DATAALIGN_RIGHT;           /* Right-alignment for converted data */
     AdcHandle.Init.EOCSelection             = DISABLE;                       /* EOC flag picked-up to indicate conversion end */
     AdcHandle.Init.DMAContinuousRequests = ENABLE;                        /* DMA continuous mode enabled */
+#endif
 #endif
     AdcHandle.Init.Resolution               = ADC_RESOLUTION_12B;            /* 12-bit resolution for converted data */
     AdcHandle.Init.ScanConvMode             = ENABLE;                        /* Sequencer disabled (ADC conversion on only 1 channel: channel set on rank 1) */
@@ -229,6 +243,7 @@ static uint32_t AddActiveChannels(ADC_HandleTypeDef& AdcHandle, uint32_t AdcNum,
 
 static void ConfigureChannels()
 {
+#if !defined(__STM32MP1__) //no ADC configuration for now
     // Reset everything
     if (Adc3Running)
     {
@@ -295,11 +310,12 @@ static void ConfigureChannels()
         Adc1Running = true;
     }
     NumActiveChannels[1] = Active1;
+#endif
 }
 
 namespace LegacyAnalogIn
 {
-
+    #if !defined(__STM32MP1__)
     // Module initialisation
     void AnalogInInit()
     {
@@ -399,6 +415,7 @@ namespace LegacyAnalogIn
     {
         return CHAN_VREFINT;
     }
+    #endif
 }
 #endif
 // End

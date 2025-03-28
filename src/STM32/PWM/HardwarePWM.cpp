@@ -17,7 +17,7 @@ HardwareTimer Timer8(TIM8);
 HardwareTimer Timer12(TIM12);
 HardwareTimer Timer13(TIM13);
 HardwareTimer Timer14(TIM14);
-#if STM32H7
+#if STM32H7 || __STM32MP1__
 HardwareTimer Timer15(TIM15);
 HardwareTimer Timer16(TIM16);
 HardwareTimer Timer17(TIM17);

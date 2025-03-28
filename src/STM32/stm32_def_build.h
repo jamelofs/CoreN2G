@@ -352,8 +352,10 @@
 #define CMSIS_STARTUP_FILE "startup_stm32wb50xx_cm4.s"
 #elif defined(STM32WB55xx)
 #define CMSIS_STARTUP_FILE "startup_stm32wb55xx_cm4.s"
+#elif defined(STM32MP157Fxx)
+#define CMSIS_STARTUP_FILE "startup_stm32mp157facx.s"
 #else
-#error UNKNOWN CHIP
+#error UNKNOWN CHIP (James: Add MP157D here)
 #endif
 #else
 #warning "No CMSIS startup file defined, custom one should be used"

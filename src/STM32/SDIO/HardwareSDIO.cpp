@@ -9,7 +9,7 @@
 #include "task.h"
 #endif
 
-#if STM32H7
+#if defined(STM32H7) || defined(__STM32MP1__)
 #define SDIO_CLOCK_EDGE_RISING SDMMC_CLOCK_EDGE_RISING
 #define SDIO_CLOCK_POWER_SAVE_DISABLE SDMMC_CLOCK_POWER_SAVE_DISABLE
 #define SDIO_BUS_WIDE_1B SDMMC_BUS_WIDE_1B
@@ -42,7 +42,7 @@ extern "C" void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsdio)
 #endif
 }    
 
-#if STM32H7
+#if defined(STM32H7) || defined(__STM32MP1__)
 extern "C" void HAL_SD_AbortCallback(SD_HandleTypeDef *hsd) {
 }
 
@@ -119,7 +119,7 @@ uint8_t HardwareSDIO::tryInit(bool highspeed) noexcept
   int retryCnt = 0;
   do {
     //if (retryCnt > 0) debugPrintf("SDIO Init: retry %d\n", retryCnt);
-#if STM32H7
+#if defined(STM32H7) || defined(__STM32MP1__)
     __HAL_RCC_SDMMC1_FORCE_RESET();
     __HAL_RCC_SDMMC1_RELEASE_RESET();
     hsd.Instance = SDMMC1;
@@ -187,7 +187,7 @@ uint8_t HardwareSDIO::Init() noexcept
   if (IsDetected() != SD_PRESENT) {
     return MSD_ERROR;
   }
-#if STM32H7
+#if defined(STM32H7) || defined(__STM32MP1__)
   __HAL_RCC_SDMMC1_CLK_ENABLE();
 #else
   __HAL_RCC_SDIO_CLK_ENABLE();
@@ -198,7 +198,7 @@ uint8_t HardwareSDIO::Init() noexcept
   pinmap_pinout(PC_11, PinMap_SD);
   pinmap_pinout(PC_12, PinMap_SD);
   pinmap_pinout(PD_2, PinMap_SD);
-#if STM32H7
+#if defined(STM32H7) || defined(__STM32MP1__)
   NVIC_SetPriority(SDMMC1_IRQn, priority);
   NVIC_EnableIRQ(SDMMC1_IRQn);      
 #else

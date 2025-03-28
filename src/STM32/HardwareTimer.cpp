@@ -1008,12 +1008,20 @@ uint32_t HardwareTimer::getTimerClkFreq()
   HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
   switch (getTimerClkSrc(_HardwareTimerObj.handle.Instance)) {
     case 1:
+#ifdef __STM32MP1__
+      uwAPBxPrescaler = clkconfig.APB1_Div;
+#else
       uwAPBxPrescaler = clkconfig.APB1CLKDivider;
+#endif
       uwTimclock = HAL_RCC_GetPCLK1Freq();
       break;
 #if !defined(STM32F0xx) && !defined(STM32G0xx)
     case 2:
+#ifdef __STM32MP1__
+      uwAPBxPrescaler = clkconfig.APB2_Div;
+#else
       uwAPBxPrescaler = clkconfig.APB2CLKDivider;
+#endif
       uwTimclock = HAL_RCC_GetPCLK2Freq();
       break;
 #endif
@@ -1101,6 +1109,8 @@ uint32_t HardwareTimer::getTimerClkFreq()
     } else
 #endif
 #endif
+#if defined(__STM32MP1__)
+#else
     switch (uwAPBxPrescaler) {
       default:
       case RCC_HCLK_DIV1:
@@ -1113,6 +1123,7 @@ uint32_t HardwareTimer::getTimerClkFreq()
         uwTimclock *= 2;
         break;
     }
+#endif
 #endif /* STM32H7xx */
   return uwTimclock;
 }

@@ -75,12 +75,20 @@ static inline uint32_t rbit(uint32_t v) noexcept
 }
 
 // Only a single instance of the CRC engine, define it here
+#ifdef __STM32MP1__
+HardwareCRC32 HWCRC32(CRC1);
+#else
 HardwareCRC32 HWCRC32(CRC);
+#endif
 
 HardwareCRC32::HardwareCRC32(CRC_TypeDef *Instance) noexcept : inst(Instance)
 {
     // make sure the hardware has power
+#ifdef __STM32MP1__
+    __HAL_RCC_CRC1_CLK_ENABLE();
+#else
     __HAL_RCC_CRC_CLK_ENABLE();
+#endif
 }
 
 uint32_t inline HardwareCRC32::Calc(const uint8_t val, const uint32_t crc) noexcept

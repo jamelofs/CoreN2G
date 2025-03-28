@@ -13,6 +13,8 @@
 # include <stm32h7.h>
 #elif defined(__STM32F4__)
 # include <stm32f4.h>
+#elif defined(__STM32MP1__)
+# include <stm32mp1.h>
 #endif
 
 // Core types used in interfaces and associated constants

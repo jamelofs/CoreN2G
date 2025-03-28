@@ -685,13 +685,17 @@ void WatchdogInit() noexcept
     wdHandle.Instance = IWDG1;
 	wdHandle.Init.Window = IWDG_WINDOW_DISABLE;
 #elif __STM32MP1__
-	wdHandle.Instance = WWDG1;
+	wdHandle.Instance = IWDG1;
 #else
     wdHandle.Instance = IWDG;
 #endif
 	wdHandle.Init.Reload = IWDG_RLR_RL;
+#if __STM32MP1__
+wdHandle.Init.Prescaler = IWDG_PR_PR_1;
+#else
     wdHandle.Init.Prescaler = IWDG_PRESCALER_16;
-    HAL_IWDG_Init(&wdHandle);
+	HAL_IWDG_Init(&wdHandle);                                 //TODO: Initialize the watchdog for STM32MP1
+#endif
 #elif RP2040
 	watchdog_enable(750, true);									// we reset the timer to run at 750kHz instead of 1MHz, so 1 second is 750 "milliseconds"
 #else
@@ -710,7 +714,9 @@ void WatchdogReset() noexcept
 #elif SAME70 || SAM4E || SAM4S
 	WDT->WDT_CR = WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT;
 #elif STM32
+#if !defined(__STM32MP1__)                                          //TODO
     HAL_IWDG_Refresh(&wdHandle);
+#endif
 #elif RP2040
 	watchdog_update();
 #else
