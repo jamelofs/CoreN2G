@@ -24,6 +24,8 @@
 #include <string.h>
 #if defined(__STM32H7__)
 # include "stm32h7xx_hal_gpio.h"
+#elif defined(__STM32MP1__)
+# include "stm32mp1xx_hal_gpio.h"
 #else
 # include "stm32f4xx_hal_gpio.h"
 #endif

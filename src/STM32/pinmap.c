@@ -18,6 +18,8 @@
 #include "pinconfig.h"
 #if defined(__STM32H7__)
 # include "stm32h7xx_ll_gpio.h"
+#elif defined(__STM32MP1__)
+#include "stm32mp1xx_ll_gpio.h"
 #else
 # include "stm32f4xx_ll_gpio.h"
 #endif
