@@ -23,7 +23,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,6 +46,29 @@
   */
 
 #include "stm32mp1xx.h"
+
+/*----------------------------------------------------------------------------
+  Define clocks
+ *----------------------------------------------------------------------------*/
+#if !defined  (HSE_VALUE)
+  #define HSE_VALUE            ((uint32_t)24000000U)  /*!< Value of the External oscillator in Hz */
+#endif /* HSE_VALUE */
+
+#if !defined  (HSI_VALUE)
+  #define HSI_VALUE            ((uint32_t)64000000U)  /*!< Value of the Internal oscillator in Hz*/
+#endif /* HSI_VALUE */
+
+#if !defined  (CSI_VALUE)
+  #define CSI_VALUE            ((uint32_t)4000000U)  /*!< Value of the Internal oscillator in Hz*/
+#endif /* CSI_VALUE */
+
+#if !defined  (LSI_VALUE)
+  #define LSI_VALUE             ((uint32_t)32000U)   /*!< Value of the Internal Low Speed oscillator in Hz*/
+#endif /* LSI_VALUE */
+
+#if !defined  (LSE_VALUE)
+  #define LSE_VALUE             ((uint32_t)32768U)   /*!< Value of the External Low Speed oscillator in Hz*/
+#endif /* LSE_VALUE */
 
 /**
   * @}
@@ -74,7 +97,7 @@
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
 #define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field. 
-                                   This value must be a multiple of 0x200. */
+                                   This value must be a multiple of 0x400. */
 /******************************************************************************/
 
 /**
@@ -222,7 +245,7 @@ void SystemCoreClockUpdate (void)
     pll3m = ((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVM3) >> RCC_PLL3CFGR1_DIVM3_Pos) + 1U;
     pll3fracen = (RCC->PLL3FRACR & RCC_PLL3FRACR_FRACLE) >> 16U;
     fracn1 = (float)(pll3fracen * ((RCC->PLL3FRACR & RCC_PLL3FRACR_FRACV) >> 3U));
-    pll3vco = (float)((float)((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1/(float) 0x1FFFU));
+    pll3vco = (float)((float)((RCC->PLL3CFGR1 & RCC_PLL3CFGR1_DIVN) + 1U) + (fracn1 / (float) 0x1FFF));
 
     if (pll3m != 0U)
     {
@@ -261,7 +284,7 @@ void SystemCoreClockUpdate (void)
 #ifdef DATA_IN_ExtSRAM
 /**
   * @brief  Setup the external memory controller.
-  *         Called in startup_stm32L4xx.s before jump to main.
+  *         Called in startup_stm32mp15xx.s before jump to main.
   *         This function configures the external SRAM mounted on Eval boards
   *         This SRAM will be used as program data memory (including heap and stack).
   * @param  None

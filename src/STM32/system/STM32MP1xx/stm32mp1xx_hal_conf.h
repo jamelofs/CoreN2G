@@ -1,4 +1,4 @@
-#ifndef __STM32MP1xx_HAL_CONF_DEFAULT__H
+#ifndef __STM32MP1xx_HAL_CONF_DEFAULT_H
 #define __STM32MP1xx_HAL_CONF_DEFAULT_H
 
 #include "variant.h"
