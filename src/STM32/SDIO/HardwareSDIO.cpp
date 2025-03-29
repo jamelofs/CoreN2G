@@ -42,7 +42,7 @@ extern "C" void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsdio)
 #endif
 }    
 
-#if defined(STM32H7) || defined(__STM32MP1__)
+#if defined(STM32H7)
 extern "C" void HAL_SD_AbortCallback(SD_HandleTypeDef *hsd) {
 }
 
@@ -51,7 +51,7 @@ extern "C" void SDMMC1_IRQHandler()
   HAL_SD_IRQHandler(&(HardwareSDIO::SDIO1.hsd));
 }
 #else
-
+#ifndef __STM32MP1__
 extern "C" void DMA2_Stream3_IRQHandler()
 {
   HAL_DMA_IRQHandler(&(HardwareSDIO::SDIO1.dmaRx));    
@@ -96,6 +96,7 @@ void HardwareSDIO::initDmaStream(DMA_HandleTypeDef& hdma, DMA_Stream_TypeDef *in
   NVIC_SetPriority(irq, prio);
   NVIC_EnableIRQ(irq);      
 }
+#endif
 #endif
 
 HardwareSDIO::HardwareSDIO() noexcept

@@ -315,10 +315,10 @@ static void ConfigureChannels()
 
 namespace LegacyAnalogIn
 {
-    #if !defined(__STM32MP1__)
     // Module initialisation
     void AnalogInInit()
     {
+        #if !defined(__STM32MP1__)
         // Initially no channels are mapped
         for(uint32_t i = 0; i < NumChannelsADC1; i++)
             ChanMap1[i] = -1;
@@ -333,11 +333,13 @@ namespace LegacyAnalogIn
         __HAL_LINKDMA(&Adc3Handle, DMA_Handle, Dma3Handle);
         // Note we deliberately do not setup the interrupt handler normnally used for DMA operations
         // this code runs the capture/conversion process with no intervention from the mcu
+        #endif
     }
 
     // Enable or disable a channel. Use AnalogCheckReady to make sure the ADC is ready before calling this.
     void AnalogInEnableChannel(AnalogChannelNumber channel, bool enable)
     {
+        #if !defined(__STM32MP1__)
         //#if 0
         if (channel == NO_ADC) 
         {
@@ -353,13 +355,14 @@ namespace LegacyAnalogIn
         }
         ChanMap[AdcNo][channel] = (enable ? 0 : -1);
         ConfigureChannels();
-        //#endif
+        #endif
     }
 
 
     // Read the most recent 12-bit result from a channel
     uint16_t AnalogInReadChannel(AnalogChannelNumber channel)
     {
+        #if !defined(__STM32MP1__)
         if (channel == NO_ADC)
             return 0;
         AnalogChannelNumber AdcNo = (channel >> 16);
@@ -383,6 +386,8 @@ namespace LegacyAnalogIn
         }
         // decimate
         return val >> OversampleBits;
+        #endif
+        return 0;
     }
 
 
@@ -415,7 +420,6 @@ namespace LegacyAnalogIn
     {
         return CHAN_VREFINT;
     }
-    #endif
 }
 #endif
 // End

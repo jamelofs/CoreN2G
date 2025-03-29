@@ -156,7 +156,7 @@ const PinName digitalPin[] = {
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern uint32_t _szero_nocache;
+// extern uint32_t _szero_nocache;
 extern uint32_t _ezero_nocache;
 
 void SystemClockStartupInit() {
@@ -473,10 +473,10 @@ WEAK void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 
   /* Zero uncahced memory */
-	for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)
-	{
-		*pDest++ = 0;
-	}
+	// for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)
+	// {
+	// 	*pDest++ = 0;
+	// }
 
 }
 
