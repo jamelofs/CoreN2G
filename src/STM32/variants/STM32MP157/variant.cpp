@@ -374,7 +374,7 @@ void MPU_Memory_Protection(void)
   */
 WEAK void SystemClock_Config(void)
 {
-  SystemClockStartupInit();
+  // SystemClockStartupInit();
 
   ////////////////////////////////////////////////
 
