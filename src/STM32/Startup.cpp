@@ -23,6 +23,7 @@
 #include "dwt.h"
 #include "stm32mp1xx.h"
 #include "stm32mp1xx_hal.h"
+#include "ResetCause.h"
 
 //extern void __libc_init_array(void);
 //extern void init(void);
@@ -36,6 +37,7 @@ void initVariant() { }
 // we set clocks etc. Used by bootloader
 void AppPreInit() __attribute__((weak));
 void AppPreInit() { }
+void Error_Handler(void);
 
 // Force init to be called *first*, i.e. before static object allocation.
 // Otherwise, statically allocated objects that need HAL may fail.
@@ -76,29 +78,34 @@ __attribute__((constructor(101))) void premain()
  */
 int main(void)
 {
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  // HAL_Init();
 
-  /** Initializes the common periph clock
-  */
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_CKPER;
-  PeriphClkInit.CkperClockSelection = RCC_CKPERCLKSOURCE_HSE;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  /*Configure GPIO pins : ZENG_Pin LED_Y_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_7;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
-  HAL_GPIO_WritePin(GPIOH, GPIO_PIN_7, GPIO_PIN_SET);
-  while(1){
-    HAL_Delay(1000);
-    HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_7);
-  }
+  /* Configure the system clock */
+  // SystemClock_Config();
+  // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+
+  // /** Initializes the common periph clock
+  // */
+  // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_CKPER;
+  // PeriphClkInit.CkperClockSelection = RCC_CKPERCLKSOURCE_HSE;
+  // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  // {
+  //   Error_Handler();
+  // }
+  
+  // GPIO_InitTypeDef GPIO_InitStruct = {0};
+  // __HAL_RCC_GPIOH_CLK_ENABLE();
+  // /*Configure GPIO pins : ZENG_Pin LED_Y_Pin */
+  // GPIO_InitStruct.Pin = GPIO_PIN_7;
+  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  // GPIO_InitStruct.Pull = GPIO_NOPULL;
+  // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  // HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+  // HAL_GPIO_WritePin(GPIOH, GPIO_PIN_7, GPIO_PIN_SET);
+  // while(1){
+  //   HAL_Delay(1000);
+  //   HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_7);
+  // }
 
   initVariant();
 	// Initialise application, which includes setting up any additional clocks
@@ -118,4 +125,8 @@ int main(void)
   }
 
   return 0;
+}
+
+void Error_Handler(void) {
+  while (1);
 }

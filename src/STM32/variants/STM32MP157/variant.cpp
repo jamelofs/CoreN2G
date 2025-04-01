@@ -1,4 +1,5 @@
 #include <CoreImp.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -159,7 +160,7 @@ extern "C" {
 // extern uint32_t _szero_nocache;
 extern uint32_t _ezero_nocache;
 
-void SystemClockStartupInit() {
+void SystemClockStartupInit() { // TODO: 
 //   // Confirm is called only once time to avoid hang up caused by repeated calls in USB wakeup interrupt
 //   static bool first_call = true;
 //   if (!first_call) return;
@@ -372,7 +373,7 @@ void MPU_Memory_Protection(void)
   * @param  None
   * @retval None
   */
-WEAK void SystemClock_Config(void)
+void SystemClock_Config(void)
 {
   // SystemClockStartupInit();
 
@@ -458,19 +459,19 @@ WEAK void SystemClock_Config(void)
 
   ///////////////////////////////////////
 
-  MPU_Memory_Protection();
+  // MPU_Memory_Protection();
 
-  /* Update current SystemCoreClock value */
-  SystemCoreClockUpdate();
+  // /* Update current SystemCoreClock value */
+  // SystemCoreClockUpdate();
 
-  /* Configure the Systick interrupt time */
-  HAL_SYSTICK_Config(SystemCoreClock/1000);
+  // /* Configure the Systick interrupt time */
+  // HAL_SYSTICK_Config(SystemCoreClock/1000);
 
-  /* Configure the Systick */
-  // HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+  // /* Configure the Systick */
+  // // HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
-  /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+  // /* SysTick_IRQn interrupt configuration */
+  // HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 
   /* Zero uncahced memory */
 	// for (uint32_t *pDest = &_szero_nocache; pDest < &_ezero_nocache;)

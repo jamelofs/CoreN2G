@@ -78,8 +78,9 @@ extern "C" {
 void SystemClock_Config(void);
 
 void _Error_Handler(const char *, int);
+void Error_Handler(void);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+// #define Error_Handler() _Error_Handler(__FILE__, __LINE__)
 
 #ifdef __cplusplus
 } // extern "C"
